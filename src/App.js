@@ -6,11 +6,12 @@ function App() {
   const [products, setProducts] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [filterTimeout, setFilterTimeout] = useState(null)
-  const [filter, setFilter] = useState({
+  const defaultFilter = {
     name: '',
     price: '',
     brand: '',
-  })
+  }
+  const [filter, setFilter] = useState(defaultFilter)
   const [loading, setLoading] = useState(false)
 
   function generateAuthHeader() {
@@ -90,6 +91,7 @@ function App() {
 
   useEffect(() => {
     fetchIds()
+    setFilter(defaultFilter) //There is no such functionality.. :(
   }, [currentPage])
 
   const handlePrevPage = () => {
@@ -155,26 +157,29 @@ function App() {
           <div className="loader"></div>
         </div>
       ) : (
-        <div className="product-list">
-          {products.map((product) => (
-            <div key={product.id} className="product">
-              <p>ID: {product.id}</p>
-              <p>Name: {product.product}</p>
-              <p>Price: {product.price}</p>
-              <p>Brand: {product.brand}</p>
-            </div>
-          ))}
-        </div>
+        <>
+          <div className="product-list">
+            {products.map((product) => (
+              <div key={product.id} className="product">
+                <p>ID: {product.id}</p>
+                <p>Name: {product.product}</p>
+                <p>Price: {product.price}</p>
+                <p>Brand: {product.brand}</p>
+              </div>
+            ))}
+          </div>
+          <div className="pagination">
+            <button onClick={handlePrevPage} disabled={currentPage === 1}>
+              Prev
+            </button>
+            <span>Page {currentPage}</span>
+            <button onClick={handleNextPage}>
+              Next
+            </button>
+          </div>
+        </>
+        
       )}
-      <div className="pagination">
-        <button onClick={handlePrevPage} disabled={currentPage === 1}>
-          Prev
-        </button>
-        <span>Page {currentPage}</span>
-        <button onClick={handleNextPage}>
-          Next
-        </button>
-      </div>
     </div>
   )
 }

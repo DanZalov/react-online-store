@@ -11,13 +11,26 @@ h1 {
 }
 
 .filters {
+  display: flex;
+  flex-direction: column;
   margin-bottom: 20px;
 }
 
 .filters input {
-  margin-right: 10px;
+  margin-bottom: 4px;
   padding: 8px;
   font-size: 16px;
+}
+
+@media (min-width: 768px) {
+  .filters {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .filters input {
+    margin-right: 10px;
+  }
 }
 
 .product-list {
@@ -43,7 +56,21 @@ h1 {
 }
 
 .pagination {
-  margin-top: 20px;
+  position: fixed;
+  bottom: 10px;
+  left: 30px;
+  /* transform: translateX(-50%); */
+  width: auto;
+  padding: 10px 20px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  opacity: 0.5;
+  transition: opacity 0.3s ease
+}
+
+.pagination:hover {
+  opacity: 1;
 }
 
 .pagination button {
