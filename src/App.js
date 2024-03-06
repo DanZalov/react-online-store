@@ -94,7 +94,7 @@ function App() {
   }
 
   const handleNextPage = () => {
-    setCurrentPage(currentPage => currentPage++)
+    setCurrentPage(currentPage => currentPage + 1)
   }
 
   function handleFilterChange(e) {
