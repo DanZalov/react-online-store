@@ -132,10 +132,12 @@ function App() {
   }
 
   function handleSearch() {
-    if (newFilter.value === "") {
-      fetchIds()
-    } else {
-      fetchFilteredIds(newFilter)
+    if (!loading) {
+      if (newFilter.value === "") {
+        fetchIds()
+      } else {
+        fetchFilteredIds(newFilter)
+      }
     }
   }
 
