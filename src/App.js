@@ -128,28 +128,28 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Product List</h1>
+      <h1>Каталог товаров</h1>
       <div className="filters">
         <input
           type="text"
           name="product"
           value={filter.name}
           onChange={handleFilterChange}
-          placeholder="Filter by name"
+          placeholder="Фильтр по названию"
         />
         <input
           type="number"
           name="price"
           value={filter.price}
           onChange={handleFilterChange}
-          placeholder="Filter by price"
+          placeholder="Фильтр по цене"
         />
         <input
           type="text"
           name="brand"
           value={filter.brand}
           onChange={handleFilterChange}
-          placeholder="Filter by brand"
+          placeholder="Фильтр по бренду"
         />
       </div>
       {loading ? (
@@ -161,10 +161,10 @@ function App() {
           <div className="product-list">
             {products.map((product) => (
               <div key={product.id} className="product">
-                <p>ID: {product.id}</p>
-                <p>Name: {product.product}</p>
-                <p>Price: {product.price}</p>
-                <p>Brand: {product.brand}</p>
+                <p><strong>ID:</strong> {product.id}</p>
+                <p><strong>Название:</strong> {product.product}</p>
+                <p><strong>Цена:</strong> {product.price}</p>
+                <p><strong>Бренд:</strong> {product.brand}</p>
               </div>
             ))}
           </div>
