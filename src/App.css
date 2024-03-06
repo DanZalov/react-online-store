@@ -16,18 +16,19 @@ h1 {
   margin-bottom: 20px;
 }
 
+.filters select,
 .filters input {
-  margin-bottom: 4px;
+  margin-bottom: 8px;
   padding: 8px;
   font-size: 16px;
 }
 
 @media (min-width: 768px) {
   .filters {
-    display: flex;
     flex-direction: row;
   }
 
+  .filters select,
   .filters input {
     margin-right: 10px;
   }

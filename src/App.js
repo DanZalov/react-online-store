@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import './App.css'
 import md5 from 'md5'
 
@@ -6,12 +6,11 @@ function App() {
   const [products, setProducts] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [filterTimeout, setFilterTimeout] = useState(null)
-  const defaultFilter = {
-    product: '',
-    price: '',
-    brand: '',
+  const defaultNewFilter = {
+    field: 'product', 
+    value: ''
   }
-  const [filter, setFilter] = useState(defaultFilter)
+  const [newFilter, setNewFilter] = useState(defaultNewFilter)
   const [loading, setLoading] = useState(false)
 
   function generateAuthHeader() {
@@ -60,11 +59,11 @@ function App() {
     }
   }
 
-  async function fetchFilteredIds(filter) {
+  async function fetchFilteredIds(newFilter) {
     const data = await fetchData({
       action: 'filter',
       params: {
-        ...filter,
+        [newFilter.field]: newFilter.value
       },
     })
     if (data.result) {
@@ -91,7 +90,7 @@ function App() {
 
   useEffect(() => {
     fetchIds()
-    setFilter(defaultFilter) //There is no such functionality.. :(
+    setNewFilter(defaultNewFilter) //There is no such a functionality at the next page.. :(
   }, [currentPage])
 
   const handlePrevPage = () => {
@@ -102,17 +101,22 @@ function App() {
     setCurrentPage(currentPage => currentPage + 1)
   }
 
-  function handleFilterChange(e) {
-    let { name, value } = e.target
+  const handleFieldChange = (e) => {
+    setNewFilter({ value: "", field: e.target.value });
+  }
+
+  const handleInputChange = (e) => {
+    let { value } = e.target
+    const name = newFilter.field
     if (name === 'price') {
       value = Number(value)
       if (value === 0) {
         value = ""
       }
     }
-    setFilter({
-      ...defaultFilter,
-      [name]: value,
+    setNewFilter({
+      ...newFilter,
+      value
     })
 
     clearTimeout(filterTimeout)
@@ -121,7 +125,8 @@ function App() {
         fetchIds()
       } else {
         fetchFilteredIds({
-          [name]: value,
+          ...newFilter,
+          value
         })
       }
     }, 1000))
@@ -131,27 +136,12 @@ function App() {
     <div className="App">
       <h1>Каталог товаров</h1>
       <div className="filters">
-        <input
-          type="text"
-          name="product"
-          value={filter.name}
-          onChange={handleFilterChange}
-          placeholder="Фильтр по названию"
-        />
-        <input
-          type="number"
-          name="price"
-          value={filter.price}
-          onChange={handleFilterChange}
-          placeholder="Фильтр по цене"
-        />
-        <input
-          type="text"
-          name="brand"
-          value={filter.brand}
-          onChange={handleFilterChange}
-          placeholder="Фильтр по бренду"
-        />
+        <select value={newFilter.field} onChange={handleFieldChange}>
+          <option value="product">Название</option>
+          <option value="price">Цена</option>
+          <option value="brand">Бренд</option>
+        </select>
+        <input type="text" value={newFilter.value} onChange={handleInputChange} placeholder="Введите значение" />
       </div>
       {loading ? (
         <div className="loader-container">
