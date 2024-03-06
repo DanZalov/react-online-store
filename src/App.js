@@ -5,13 +5,13 @@ import md5 from 'md5'
 function App() {
   const [products, setProducts] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
-  const [filterTimeout, setFilterTimeout] = useState(null)
   const defaultNewFilter = {
     field: 'product', 
     value: ''
   }
   const [newFilter, setNewFilter] = useState(defaultNewFilter)
   const [loading, setLoading] = useState(false)
+  const [nextPage, setNextPage] = useState(false)
 
   function generateAuthHeader() {
     const password = 'Valantis'
@@ -48,6 +48,11 @@ function App() {
     if (data.result) {
       const products = data.result
       const uniqueProducts = {}
+      if (products.length < 50) {
+        setNextPage(false)
+      } else {
+        setNextPage(true)
+      }
       products.forEach(product => {
         if (!uniqueProducts[product.id]) {
           uniqueProducts[product.id] = product
@@ -118,18 +123,20 @@ function App() {
       ...newFilter,
       value
     })
+  }
 
-    clearTimeout(filterTimeout)
-    setFilterTimeout(setTimeout(() => {
-      if (value === "") {
-        fetchIds()
-      } else {
-        fetchFilteredIds({
-          ...newFilter,
-          value
-        })
-      }
-    }, 1000))
+  function handleKeyDown(e) {
+    if (e.key === 'Enter') {
+      handleSearch()
+    }
+  }
+
+  function handleSearch() {
+    if (newFilter.value === "") {
+      fetchIds()
+    } else {
+      fetchFilteredIds(newFilter)
+    }
   }
 
   return (
@@ -137,11 +144,15 @@ function App() {
       <h1>Каталог товаров</h1>
       <div className="filters">
         <select value={newFilter.field} onChange={handleFieldChange}>
-          <option value="product">Название</option>
-          <option value="price">Цена</option>
-          <option value="brand">Бренд</option>
+          <option value="product">Фильтр по названию</option>
+          <option value="price">Фильтр по цене</option>
+          <option value="brand">Фильтр по бренду</option>
         </select>
-        <input type="text" value={newFilter.value} onChange={handleInputChange} placeholder="Введите значение" />
+        <span>
+          <input type="text" value={newFilter.value} onChange={handleInputChange} onKeyDown={handleKeyDown}
+          placeholder="Введите значение" />
+          <button onClick={handleSearch}>Искать</button>
+        </span>
       </div>
       {loading ? (
         <div className="loader-container">
@@ -164,7 +175,7 @@ function App() {
               Prev
             </button>
             <span>Page {currentPage}</span>
-            <button onClick={handleNextPage}>
+            <button onClick={handleNextPage} disabled={!nextPage}>
               Next
             </button>
           </div>

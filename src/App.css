@@ -17,10 +17,21 @@ h1 {
 }
 
 .filters select,
-.filters input {
+.filters input,
+.filters button {
   margin-bottom: 8px;
   padding: 8px;
   font-size: 16px;
+}
+
+.filters input {
+  min-width: 0px;
+  flex: 1;
+  margin-right: 10px;
+}
+
+.filters span {
+  display: flex;
 }
 
 @media (min-width: 768px) {
@@ -29,7 +40,8 @@ h1 {
   }
 
   .filters select,
-  .filters input {
+  .filters input,
+  .filters button {
     margin-right: 10px;
   }
 }
