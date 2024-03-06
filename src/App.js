@@ -11,6 +11,7 @@ function App() {
     price: '',
     brand: '',
   })
+  const [loading, setLoading] = useState(false)
 
   function generateAuthHeader() {
     const password = 'Valantis'
@@ -20,6 +21,7 @@ function App() {
   }
   
   async function fetchData(body) {
+    setLoading(true)
     const response = await fetch(`http://api.valantis.store:40000/`, {
       method: 'POST',
       headers: {
@@ -42,6 +44,7 @@ function App() {
         ids: productIdArr,
       },
     })
+    setLoading(false)
     if (data.result) {
       const products = data.result
       const uniqueProducts = {}
@@ -147,16 +150,22 @@ function App() {
           placeholder="Filter by brand"
         />
       </div>
-      <div className="product-list">
-        {products.map((product) => (
-          <div key={product.id} className="product">
-            <p>ID: {product.id}</p>
-            <p>Name: {product.product}</p>
-            <p>Price: {product.price}</p>
-            <p>Brand: {product.brand}</p>
-          </div>
-        ))}
-      </div>
+      {loading ? (
+        <div className="loader-container">
+          <div className="loader"></div>
+        </div>
+      ) : (
+        <div className="product-list">
+          {products.map((product) => (
+            <div key={product.id} className="product">
+              <p>ID: {product.id}</p>
+              <p>Name: {product.product}</p>
+              <p>Price: {product.price}</p>
+              <p>Brand: {product.brand}</p>
+            </div>
+          ))}
+        </div>
+      )}
       <div className="pagination">
         <button onClick={handlePrevPage} disabled={currentPage === 1}>
           Prev
