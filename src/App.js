@@ -7,7 +7,7 @@ function App() {
   const [currentPage, setCurrentPage] = useState(1)
   const [filterTimeout, setFilterTimeout] = useState(null)
   const defaultFilter = {
-    name: '',
+    product: '',
     price: '',
     brand: '',
   }
@@ -111,6 +111,7 @@ function App() {
       }
     }
     setFilter({
+      ...defaultFilter,
       [name]: value,
     })
 
