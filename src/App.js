@@ -101,15 +101,24 @@ function App() {
     let { name, value } = e.target
     if (name === 'price') {
       value = Number(value)
+      if (value === 0) {
+        value = ""
+      }
     }
     setFilter({
       [name]: value,
     })
 
     clearTimeout(filterTimeout)
-    setFilterTimeout(setTimeout(() => fetchFilteredIds({
-      [name]: value,
-    }), 1000))
+    setFilterTimeout(setTimeout(() => {
+      if (value === "") {
+        fetchIds()
+      } else {
+        fetchFilteredIds({
+          [name]: value,
+        })
+      }
+    }, 1000))
   }
 
   return (
