@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import './App.css'
-import md5 from 'md5'
-import SearchIcon from './components/SearchIcon'
 import Loader from './components/Loader'
 import Pagination from './components/Pagination'
 import ProductList from './components/ProductList'
+import { generateAuthHeader, uniqueProductArray } from './utilities'
+import FilterBar from './components/FilterBar'
 
 function App() {
   const [products, setProducts] = useState([])
@@ -16,13 +16,6 @@ function App() {
   const [newFilter, setNewFilter] = useState(defaultNewFilter)
   const [loading, setLoading] = useState(false)
   const [nextPage, setNextPage] = useState(false)
-
-  function generateAuthHeader() {
-    const password = 'Valantis'
-    const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '')
-    const authString = `${password}_${timestamp}`
-    return md5(authString)
-  }
 
   async function fetchData(body) {
     setLoading(true)
@@ -51,16 +44,10 @@ function App() {
     setLoading(false)
     if (data.result) {
       const products = data.result
-      const uniqueProducts = {}
       if (products.length < 50) {
         setNextPage(false)
       }
-      products.forEach((product) => {
-        if (!uniqueProducts[product.id]) {
-          uniqueProducts[product.id] = product
-        }
-      })
-      setProducts(Object.values(uniqueProducts))
+      setProducts(uniqueProductArray(products))
     } else {
       console.error('Fetching products error:', data)
     }
@@ -101,31 +88,6 @@ function App() {
     adaptiveFetch()
   }, [currentPage])
 
-  const handleFieldChange = (e) => {
-    setNewFilter({ value: '', field: e.target.value })
-  }
-
-  const handleInputChange = (e) => {
-    let { value } = e.target
-    const name = newFilter.field
-    if (name === 'price') {
-      value = Number(value)
-      if (value === 0) {
-        value = ''
-      }
-    }
-    setNewFilter({
-      ...newFilter,
-      value,
-    })
-  }
-
-  function handleKeyDown(e) {
-    if (e.key === 'Enter') {
-      handleSearch()
-    }
-  }
-
   function handleSearch() {
     if (!loading) {
       if (currentPage === 1) {
@@ -147,25 +109,11 @@ function App() {
   return (
     <div className="App">
       <h1>Каталог товаров</h1>
-      <div className="filters">
-        <select value={newFilter.field} onChange={handleFieldChange}>
-          <option value="product">Фильтр по названию</option>
-          <option value="price">Фильтр по цене</option>
-          <option value="brand">Фильтр по бренду</option>
-        </select>
-        <span>
-          <input
-            type="text"
-            value={newFilter.value}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
-            placeholder="Введите значение"
-          />
-          <button onClick={handleSearch}>
-            <SearchIcon size={24} />
-          </button>
-        </span>
-      </div>
+      <FilterBar
+        newFilter={newFilter}
+        setNewFilter={setNewFilter}
+        handleSearch={handleSearch}
+      />
       <Loader show={loading} />
       {!loading && (
         <>
