@@ -91,7 +91,7 @@ h1 {
   border: 1px solid #ccc;
   border-radius: 5px;
   opacity: 0.5;
-  transition: opacity 0.3s ease
+  transition: opacity 0.3s ease;
 }
 
 .pagination:hover {
@@ -127,8 +127,12 @@ h1 {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Hide default arrows in number input */
@@ -140,6 +144,6 @@ input::-webkit-inner-spin-button {
 }
 
 /* Firefox */
-input[type=number] {
+input[type='number'] {
   -moz-appearance: textfield;
 }
