@@ -30,6 +30,17 @@ h1 {
   margin-right: 10px;
 }
 
+.filters select {
+  cursor: pointer;
+}
+
+.filters button {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 4px;
+}
+
 .filters span {
   display: flex;
 }
@@ -40,8 +51,7 @@ h1 {
   }
 
   .filters select,
-  .filters input,
-  .filters button {
+  .filters input {
     margin-right: 10px;
   }
 }
