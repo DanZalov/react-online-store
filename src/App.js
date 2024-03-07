@@ -117,17 +117,20 @@ function App() {
         handleSearch={handleSearch}
       />
       <Loader show={loading} />
-      {!loading && (
-        <>
-          <ProductList products={products} />
-          <Pagination
-            currentPage={currentPage}
-            nextPage={nextPage}
-            setCurrentPage={setCurrentPage}
-            show={showPagination}
-          />
-        </>
-      )}
+      {!loading &&
+        (products.length > 1 ? (
+          <>
+            <ProductList products={products} />
+            <Pagination
+              currentPage={currentPage}
+              nextPage={nextPage}
+              setCurrentPage={setCurrentPage}
+              show={showPagination}
+            />
+          </>
+        ) : (
+          <h3>К сожалению, ничего не найдено.. :(</h3>
+        ))}
     </div>
   )
 }
