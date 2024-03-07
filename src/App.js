@@ -27,7 +27,7 @@ function App() {
         'X-Auth': generateAuthHeader(),
       },
       body: JSON.stringify(body),
-    })
+    }).catch((error) => console.log(error.id || error))
     if (response.ok) {
       return await response.json()
     } else {
