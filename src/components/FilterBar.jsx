@@ -1,3 +1,4 @@
+import CloseIcon from './CloseIcon'
 import SearchIcon from './SearchIcon'
 
 export default function FilterBar({ newFilter, setNewFilter, handleSearch }) {
@@ -26,6 +27,13 @@ export default function FilterBar({ newFilter, setNewFilter, handleSearch }) {
     }
   }
 
+  function clearInput() {
+    setNewFilter({
+      ...newFilter,
+      value: '',
+    })
+  }
+
   return (
     <div className="filters">
       <select value={newFilter.field} onChange={handleFieldChange}>
@@ -34,13 +42,20 @@ export default function FilterBar({ newFilter, setNewFilter, handleSearch }) {
         <option value="brand">Фильтр по бренду</option>
       </select>
       <span>
-        <input
-          type="text"
-          value={newFilter.value}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          placeholder="Введите значение"
-        />
+        <span className="input-container">
+          <input
+            type="text"
+            value={newFilter.value}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            placeholder="Введите значение"
+          />
+          {newFilter.value && (
+            <button className="clear-button" onClick={clearInput}>
+              <CloseIcon size={20} />
+            </button>
+          )}
+        </span>
         <button onClick={handleSearch}>
           <SearchIcon size={24} />
         </button>
