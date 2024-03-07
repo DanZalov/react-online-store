@@ -1,10 +1,19 @@
-export default function Pagination({ currentPage, setCurrentPage, nextPage }) {
+export default function Pagination({
+  currentPage,
+  setCurrentPage,
+  nextPage,
+  show,
+}) {
   function handlePrevPage() {
     setCurrentPage(currentPage > 1 ? currentPage - 1 : 1)
   }
 
   function handleNextPage() {
     setCurrentPage((currentPage) => currentPage + 1)
+  }
+
+  if (!show) {
+    return <></>
   }
 
   return (

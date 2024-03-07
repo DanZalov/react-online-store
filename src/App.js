@@ -16,6 +16,7 @@ function App() {
   const [newFilter, setNewFilter] = useState(defaultNewFilter)
   const [loading, setLoading] = useState(false)
   const [nextPage, setNextPage] = useState(false)
+  const [showPagination, setShowPagination] = useState(false)
 
   async function fetchData(body) {
     setLoading(true)
@@ -61,7 +62,7 @@ function App() {
       },
     })
     if (data.result) {
-      setNextPage(false)
+      setShowPagination(false)
       fetchProducts(data.result)
     } else {
       console.error('Fetching filtered Id error:', data)
@@ -78,6 +79,7 @@ function App() {
     })
     if (data.result) {
       setNextPage(true)
+      setShowPagination(true)
       fetchProducts(data.result)
     } else {
       console.error('Fetching filtered Id error:', data)
@@ -122,6 +124,7 @@ function App() {
             currentPage={currentPage}
             nextPage={nextPage}
             setCurrentPage={setCurrentPage}
+            show={showPagination}
           />
         </>
       )}
