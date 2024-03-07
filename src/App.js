@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import './App.css'
 import md5 from 'md5'
+import SearchIcon from './components/SearchIcon'
+import Loader from './components/Loader'
+import Pagination from './components/Pagination'
 
 function App() {
   const [products, setProducts] = useState([])
@@ -50,9 +53,7 @@ function App() {
       const uniqueProducts = {}
       if (products.length < 50) {
         setNextPage(false)
-      } else {
-        setNextPage(true)
-      }
+      } 
       products.forEach(product => {
         if (!uniqueProducts[product.id]) {
           uniqueProducts[product.id] = product
@@ -72,6 +73,7 @@ function App() {
       },
     })
     if (data.result) {
+      setNextPage(false)
       fetchProducts(data.result)
     } else {
       console.error('Fetching filtered Id error:', data)
@@ -87,6 +89,7 @@ function App() {
       },
     })
     if (data.result) {
+      setNextPage(true)
       fetchProducts(data.result)
     } else {
       console.error('Fetching filtered Id error:', data)
@@ -94,17 +97,16 @@ function App() {
   }
 
   useEffect(() => {
-    fetchIds()
-    setNewFilter(defaultNewFilter) //There is no such a functionality at the next page.. :(
+    adaptiveFetch()
   }, [currentPage])
 
-  const handlePrevPage = () => {
-    setCurrentPage(currentPage > 1 ? currentPage - 1 : 1)
-  }
+  // const handlePrevPage = () => {
+  //   setCurrentPage(currentPage > 1 ? currentPage - 1 : 1)
+  // }
 
-  const handleNextPage = () => {
-    setCurrentPage(currentPage => currentPage + 1)
-  }
+  // const handleNextPage = () => {
+  //   setCurrentPage(currentPage => currentPage + 1)
+  // }
 
   const handleFieldChange = (e) => {
     setNewFilter({ value: "", field: e.target.value });
@@ -133,11 +135,19 @@ function App() {
 
   function handleSearch() {
     if (!loading) {
-      if (newFilter.value === "") {
-        fetchIds()
+      if (currentPage === 1) {
+        adaptiveFetch()
       } else {
-        fetchFilteredIds(newFilter)
+        setCurrentPage(1)
       }
+    }
+  }
+
+  function adaptiveFetch() {
+    if (newFilter.value === "") {
+      fetchIds()
+    } else {
+      fetchFilteredIds(newFilter)
     }
   }
 
@@ -154,17 +164,12 @@ function App() {
           <input type="text" value={newFilter.value} onChange={handleInputChange} onKeyDown={handleKeyDown}
           placeholder="Введите значение" />
           <button onClick={handleSearch}>
-            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewBox="0 0 50 50">
-              <path d="M 21 3 C 11.601563 3 4 10.601563 4 20 C 4 29.398438 11.601563 37 21 37 C 24.355469 37 27.460938 36.015625 30.09375 34.34375 L 42.375 46.625 L 46.625 42.375 L 34.5 30.28125 C 36.679688 27.421875 38 23.878906 38 20 C 38 10.601563 30.398438 3 21 3 Z M 21 7 C 28.199219 7 34 12.800781 34 20 C 34 27.199219 28.199219 33 21 33 C 13.800781 33 8 27.199219 8 20 C 8 12.800781 13.800781 7 21 7 Z"></path>
-            </svg>
+            <SearchIcon size={24} />
           </button>
         </span>
       </div>
-      {loading ? (
-        <div className="loader-container">
-          <div className="loader"></div>
-        </div>
-      ) : (
+      <Loader show={loading} />
+      {!loading && (
         <>
           <div className="product-list">
             {products.map((product) => (
@@ -176,15 +181,7 @@ function App() {
               </div>
             ))}
           </div>
-          <div className="pagination">
-            <button onClick={handlePrevPage} disabled={currentPage === 1}>
-              Prev
-            </button>
-            <span>Page {currentPage}</span>
-            <button onClick={handleNextPage} disabled={!nextPage}>
-              Next
-            </button>
-          </div>
+          <Pagination currentPage={currentPage} nextPage={nextPage} setCurrentPage={setCurrentPage}/>
         </>
         
       )}
